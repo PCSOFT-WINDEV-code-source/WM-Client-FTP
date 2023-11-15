@@ -1,0 +1,372 @@
+#To edit and compare internal_properties, use WINDEV integrated tools.
+#Internal properties refer to the properties of controls in windows, reports, etc.
+info :
+ name : UIManager
+ major_version : 28
+ minor_version : 0
+ type : 4
+ description : ""
+ subtype : 0
+class :
+ identifier : 0x1e0445f800588842
+ internal_properties : CAAAAAgAAAB2/vstTMCJbS/hlxjFxirSqKvCUuv8YxgpWyl7S3iA
+ code_elements :
+  internal_properties : CAAAAAgAAAB3nubAhJ4+gIqGvnndQfr2sdMZOEjPcV4jFMVgCPMiAf/atdxc4zOkYO8KqykaGoOK313nyBGbSGOcppJhRTJu/c1Z31K1QRFSQJHjh/FI6w==
+  type_code : 10
+  p_codes :
+   -
+     internal_properties : CAAAAAgAAAAhEyRvYyU6BtHat/gkL27/+UuOPBZ3ZzNhmLM++FVJkQteQCCNKt1RUplvprSKg7zJfDikJkrFGWHw24yhP8unDuYHajp3J2nLhfUjDxkt9TRut/6Tihm4u9uowyBI6BPSThKYN9LEhEpsncY=
+     code : |1+
+      UIManager est une classe
+      	bStop 			est un booléen
+      	bEnFonction		est un booléen
+      	bRafrachitVite	est un booléen
+      	
+      	// Constantes pour les ZR des téléchargements
+      	CONSTANTE
+      		ZR_ENATTENTE = 1
+      		ZR_TERMINE = 2
+      		ZR_ERREUR = 3
+      	FIN
+      Fin
+      
+     type : 131072
+  procedures :
+   -
+     name : Constructeur
+     procedure_id : 2162930652504754242
+     type_code : 27
+     code : |1+
+      PROCEDURE Constructeur()
+     type : 589824
+   -
+     name : Destructeur
+     procedure_id : 2162930652504819778
+     type_code : 28
+     code : |1+
+      PROCEDURE Destructeur()
+      
+     type : 655360
+   -
+     name : Run
+     internal_properties : CAAAAAgAAACOP+g/pPR8Van9Ck08XouL7r1Nsh0CWA3AoB9pGLNefWSzs2qF/T+gL6ifirCIT6K58IFZD5snRLUALi27msex2G2unW3QFMF1oJ/QUGsoAVYP6SvEuWLs3EoTCqkwJ8PchOslwJOSHujIWqiz8CqG1xqPo+u8hvv0aGf+tGgLERxlfvE0dXcw1AyeUbWzGeV9cT4UOUoF24LQlh1pabT7KdiuEnNudND1mD0MhySyb5QCgeSdQ3dsOLDvCh5HMpN5SfOc3yD7BYgfMCfSaM/78n16dyXuRQzm
+     procedure_id : 2162930691159600276
+     type_code : 12
+     code : |1-
+      PROCEDURE Run()
+      
+      // Tableaux des transferts triés par type
+      tabTransfertsEnAttente 		est un tableau de FTPTransfert
+      tabTransfertsEnCours		est un tableau de FTPTransfert
+      tabTransfertsTerminés		est un tableau de FTPTransfert
+      tabTransfertsEnErreur		est un tableau de FTPTransfert
+      tabTransfertsAnnulés		est un tableau de FTPTransfert
+      
+      Trace("Démarrage de l'UI manager")
+      
+      TANTQUE pas bStop
+      	TableauSupprimeTout(tabTransfertsEnAttente)
+      	TableauSupprimeTout(tabTransfertsEnCours)
+      	TableauSupprimeTout(tabTransfertsTerminés)
+      	TableauSupprimeTout(tabTransfertsEnErreur)
+      	TableauSupprimeTout(tabTransfertsAnnulés)
+      	
+      	// Trie des transferts
+      	pour tout clTransfert de gclFTPCoordinateur.m_tabTransferts
+      		selon clTransfert.m_nStatut
+      			CAS FTPTransfert.STATUT_ANNULE
+      				TableauAjoute(tabTransfertsAnnulés,clTransfert)
+      			CAS FTPTransfert.STATUT_ENATTENTE
+      				TableauAjoute(tabTransfertsEnAttente,clTransfert)
+      			CAS FTPTransfert.STATUT_ENCOURS
+      				TableauAjoute(tabTransfertsEnCours,clTransfert)
+      			CAS FTPTransfert.STATUT_ERREUR
+      				TableauAjoute(tabTransfertsEnErreur,clTransfert)
+      			CAS FTPTransfert.STATUT_TERMINE
+      				TableauAjoute(tabTransfertsTerminés,clTransfert)
+      			AUTRE CAS
+      		FIN
+      	FIN
+      	
+      	// Rafraîchit l'ui
+      	RafraichitUI(tabTransfertsEnAttente,tabTransfertsEnCours,tabTransfertsTerminés,tabTransfertsEnErreur)
+      	
+      	SI PAS bRafrachitVite ALORS
+      		multitache(-10)
+      	SINON
+      		bRafrachitVite = faux
+      	FIN
+      FIN
+      
+      multitache(-10)
+      
+      // Rafraîchit l'ui une dernière fois
+      RafraichitUI(tabTransfertsEnAttente,tabTransfertsEnCours,tabTransfertsTerminés,tabTransfertsEnErreur)
+      
+      bEnFonction = faux
+      bStop = faux
+      Trace("Arrêt de l'UI manager.")
+     type : 458752
+   -
+     name : Démarre
+     internal_properties : CAAAAAgAAAAO770K+vl1C8ZZucWTSduDAhRwL/DcOZRcDlgJTyFz4LgYZ9XkzmdJHC0vIMljJzYCxEJq81CdLmDYA5+K+XRVCUHWDhqIRv9TiNBlLAHrgUUW7MZ7Hm4szzxzGVz7zVCd7Ytt0pqOmuB/oNFG+Tot0BJjZ15D70ipOC8cfRo=
+     procedure_id : 2162930858663363352
+     type_code : 12
+     code : |1+
+      
+      // Résumé : Démarre le manager d'UI
+      //
+      PROCEDURE Démarre()
+      
+      bEnFonction = vrai
+      // Lancement du manager d'UI
+      ThreadExécute("UIMANAGER",threadNormal,Run)
+     type : 458752
+   -
+     name : RafraichitUI
+     internal_properties : CAAAAAgAAABodwkVgWXuYgMjNTFtE8J16YmDJFqL/TJDQ+mVnFTDZwTQto6BE0yFvA8PPfd1abFPGP3RUaqqGCwEnf/w0e7ltMqKCw/WN8D3y+DRFFPDLAhYIOPHLWDVmVufR0/13vkc9zc0KcgjZnYbGqxbrfTwWBtQ0JRRFMw+RB4J88+fzprBJu9WTlfAuMW1hinT+QemPPssz4hQF6Z3g7dvab4QcC418QGUKz/sdanJRtH63x89bHHACwYs6jy78Y/lHw==
+     procedure_id : 2162932391967110443
+     type_code : 12
+     code : |1-
+      
+      // Résumé : Rafraîchit l'interface
+      // Syntaxe :
+      //RafraichitUI (<tabTransfertsEnAttente> est tableau, <tabTransfertsEnCours> est tableau, <tabTransfertsTerminés> est tableau, <tabTransfertsEnerreur> est tableau)
+      //
+      // Paramètres :
+      //	tabTransfertsEnAttente (tableau) : Les transferts en attente
+      //	tabTransfertsEnCours (tableau) : Les transferts en cours
+      //	tabTransfertsTerminés (tableau) : Les transferts terminés
+      //	tabTransfertsEnerreur (tableau) :  en erreur
+      
+      //	tabTransfertsAnnulés (tableau) : Les transferts annulés
+      PROCEDURE RafraichitUI(tabTransfertsEnAttente est un tableau de FTPtransfert,tabTransfertsEnCours est un tableau de FTPtransfert,...
+      						tabTransfertsTerminés  est un tableau de FTPtransfert,tabTransfertsEnerreur  est un tableau de FTPtransfert)
+      
+      SI gbEnModeTablette ALORS
+      	ExécuteThreadPrincipal(RafraichitUITablette,tabTransfertsEnAttente,tabTransfertsEnCours,tabTransfertsTerminés,tabTransfertsEnerreur)
+      SINON
+      	ExécuteThreadPrincipal(RafraichitUITéléphone,tabTransfertsEnAttente,tabTransfertsEnCours,tabTransfertsTerminés,tabTransfertsEnerreur)
+      FIN
+     type : 458752
+   -
+     name : RafraichitUITéléphone
+     internal_properties : CAAAAAgAAADWjvSYQvSJ8P9A2xN29L8w1a4BZfHDr9znq0tYrOoLaxQpZKZi0+T21dM8OaPHL1RsQA4tDDnUJHNU8ROmycEvY1cUFxLATT9CfJ0iX0UDvq82vpumUL7v5ehnsHjnaZMSFCcHG8UwC49wbfMlxtGRgaf/vUja6tm1SgiOG9RaCFoiIndQe9rBJvWYpjg/pcp10qJNUrmy8jFYrpc+9Gpb4H9Jl804ZWrHZCYeDd3FKnMtE/S8uVqSWYyckcG4UjD2J98F3xX/76cnrszxnPcx7kg3UO0ECUwxUMgxA6+FOAQ0glriU8ZY4OT2GwI5vU4=
+     procedure_id : 2162936798610546184
+     type_code : 12
+     code : |1+
+      
+      // Résumé : Rafraîchit l'interface téléphone
+      // Syntaxe :
+      //RafraichitUITéléphone (<tabTransfertsEnAttente> est tableau, <tabTransfertsEnCours> est tableau, <tabTransfertsTerminés> est tableau, <tabTransfertsEnErreur> est tableau)
+      //
+      // Paramètres :
+      //	tabTransfertsEnAttente (tableau) : Les transferts en attente
+      //	tabTransfertsEnCours (tableau) : Les transferts en cours
+      //	tabTransfertsTerminés (tableau) : Les transferts terminés
+      //	tabTransfertsEnErreur (tableau) :  en erreur
+      
+      //	tabTransfertsAnnulés (tableau) : Les transferts annulés
+      PROCEDURE RafraichitUITéléphone(tabTransfertsEnAttente est un tableau de FTPtransfert,tabTransfertsEnCours est un tableau de FTPtransfert,...
+      								tabTransfertsTerminés  est un tableau de FTPtransfert,tabTransfertsEnErreur  est un tableau de FTPtransfert)
+      
+      
+      // Variables locales
+      clTransfertEnCours est un FTPTransfert
+      nPourcentage est un entier
+      
+      // Gestion des numéros
+      FEN_Principale.LIB_EnAttente = tabTransfertsEnAttente..Occurrence + tabTransfertsEnCours..Occurrence
+      FEN_Principale.LIB_Terminé = tabTransfertsTerminés..Occurrence
+      FEN_Principale.LIB_EnErreur = tabTransfertsEnErreur..Occurrence
+      
+      ///////////////////////////////////////////////////////////////////////
+      // Fichier en cours de transfert
+      // Jauge de progression
+      SI tabTransfertsEnCours..Occurrence > 0 ALORS
+      	FEN_Principale.GR_TransfertEnCours..Visible = vrai
+      	clTransfertEnCours = tabTransfertsEnCours[1]
+      	
+      	Si clTransfertEnCours.m_nOctetsTotal > 0 ALORS
+      		nPourcentage = clTransfertEnCours.m_nOctetsTransférés * 100 / clTransfertEnCours.m_nOctetsTotal	
+      	FIN
+      	
+      	// Incrémentation de la jauge
+      	FEN_Principale.JAUGE_Jauge..BorneMax = clTransfertEnCours.m_nOctetsTotal
+      	FEN_Principale.JAUGE_Jauge = clTransfertEnCours.m_nOctetsTransférés	
+      
+      	// Libellés
+      	FEN_Principale.LIB_FichierEnCoursDeTransfert = clTransfertEnCours.m_sFichier
+      	FEN_Principale.LIB_TailleEnCoursDeTransfert = ChaîneConstruit("%1/%2",TailleVersChaîne(clTransfertEnCours.m_nOctetsTransférés	),...
+      																				TailleVersChaîne(clTransfertEnCours.m_nOctetsTotal))
+      	FEN_Principale.LIB_PourcentageEnCoursDeTransfert = nPourcentage + " %"
+      																				
+      	// Sens du transfert
+      	SI clTransfertEnCours.m_bTélécharger ALORS
+      		FEN_Principale.IMG_EnCours_Sens = FEN_Principale.IMG_EnCours_Sens_Download
+      	SINON
+      		FEN_Principale.IMG_EnCours_Sens = FEN_Principale.IMG_EnCours_Sens_Upload	
+      	FIN
+      SINON
+      	FEN_Principale.GR_TransfertEnCours..Visible = faux
+      FIN
+      
+      
+      ///////////////////////////////////////////////////////////////////////
+      // Gestion des ZR
+      FEN_Principale.RafraichitZRTéléphone(tabTransfertsEnAttente,tabTransfertsEnCours,tabTransfertsTerminés,tabTransfertsEnErreur)
+      
+      
+     type : 458752
+   -
+     name : RafraichitUITablette
+     internal_properties : CAAAAAgAAAA91QP7nHc9Rh0d9q2dRlQ5AuQ++ggbda3Mf9bqOqCF1EnP4zMfi+xf/lv37TH/fBtHSCAs6ZcBAzkhRBE8UL5z4IhcP8LEkdYvMzPoL9ij8qxrhZUdmMmkewzIS5UKq/2SUOztdzBULgzWqCRJDmXAlMo6fRQ4fn+clVXVcWkyhZWxIlUBQ0joOYQvu8CM3VfYCRi5QUlI8UgL6/b2YeoEZZA7y5Z07x0yy5cJ2y55KRg2qcjjGdqnMoGHEp+vtjvvzKl9fJ/vTlZiQYVP73F8Y9G5BMTU4xnaZUcOTdyJc3MtNEmycMnOntZt9a0I
+     procedure_id : 2162936828675389890
+     type_code : 12
+     code : |1-
+      
+      // Résumé : Rafraîchit l'interface tablette
+      // Syntaxe :
+      //RafraichitUITablette (<tabTransfertsEnAttente> est tableau, <tabTransfertsEnCours> est tableau, <tabTransfertsTerminés> est tableau, <tabTransfertsEnerreur> est tableau)
+      //
+      // Paramètres :
+      //	tabTransfertsEnAttente (tableau) : Les transferts en attente
+      //	tabTransfertsEnCours (tableau) : Les transferts en cours
+      //	tabTransfertsTerminés (tableau) : Les transferts terminés
+      //	tabTransfertsEnerreur (tableau) :  en erreur
+      
+      //	tabTransfertsAnnulés (tableau) : Les transferts annulés
+      PROCEDURE RafraichitUITablette(tabTransfertsEnAttente est un tableau de FTPtransfert,tabTransfertsEnCours est un tableau de FTPtransfert,...
+      								tabTransfertsTerminés  est un tableau de FTPtransfert,tabTransfertsEnerreur  est un tableau de FTPtransfert)
+      
+      // Variables locales
+      clTransfertEnCours est un FTPTransfert
+      nPourcentage est un entier
+      
+      // Gestion des numéros
+      FEN_Principale_Tablette.SC_Transferts.LIB_EnAttente = tabTransfertsEnAttente..Occurrence + tabTransfertsEnCours..Occurrence
+      FEN_Principale_Tablette.SC_Transferts.LIB_Terminé = tabTransfertsTerminés..Occurrence
+      FEN_Principale_Tablette.SC_Transferts.LIB_EnErreur = tabTransfertsEnerreur..Occurrence
+      
+      ///////////////////////////////////////////////////////////////////////
+      // Fichier en cours de transfert
+      // Jauge de progression
+      SI tabTransfertsEnCours..Occurrence > 0 ALORS
+      	FEN_Principale_Tablette.GR_TransfertEnCours..Visible = Vrai
+      	clTransfertEnCours = tabTransfertsEnCours[1]
+      	
+      	SI clTransfertEnCours.m_nOctetsTotal > 0 ALORS
+      		nPourcentage = clTransfertEnCours.m_nOctetsTransférés * 100 / clTransfertEnCours.m_nOctetsTotal	
+      	FIN
+      	
+      	// Incrémentation de la jauge
+      	FEN_Principale_Tablette.SC_Transferts.JAUGE_Jauge..BorneMax = clTransfertEnCours.m_nOctetsTotal
+      	FEN_Principale_Tablette.SC_Transferts.JAUGE_Jauge = clTransfertEnCours.m_nOctetsTransférés	
+      	
+      	// Libellés
+      	FEN_Principale_Tablette.SC_Transferts.LIB_FichierEnCoursDeTransfert = clTransfertEnCours.m_sFichier
+      	FEN_Principale_Tablette.SC_Transferts.LIB_TailleEnCoursDeTransfert = ChaîneConstruit("%1/%2",TailleVersChaîne(clTransfertEnCours.m_nOctetsTransférés	),...
+      		TailleVersChaîne(clTransfertEnCours.m_nOctetsTotal))
+      	FEN_Principale_Tablette.SC_Transferts.LIB_PourcentageEnCoursDeTransfert = nPourcentage + " %"
+      	
+      	// Sens du transfert
+      	SI clTransfertEnCours.m_bTélécharger ALORS
+      		FEN_Principale_Tablette.SC_Transferts.IMG_EnCours_Sens = FEN_Principale_Tablette.IMG_EnCours_Sens_Download
+      	SINON
+      		FEN_Principale_Tablette.SC_Transferts.IMG_EnCours_Sens = FEN_Principale_Tablette.IMG_EnCours_Sens_Upload	
+      	FIN
+      SINON
+      	FEN_Principale_Tablette.GR_TransfertEnCours..Visible = Faux
+      FIN
+      
+      
+      ///////////////////////////////////////////////////////////////////////
+      // Gestion des ZR
+      RafraichitZRTablette(tabTransfertsEnAttente,tabTransfertsEnCours,tabTransfertsTerminés,tabTransfertsEnerreur)
+     type : 458752
+   -
+     name : Arrête
+     internal_properties : CAAAAAgAAAAOL3UfdGShyx9fetoW3cG3zS1SAgQJoRixMQ3JXOtNZL3WNai6hqNnIptElCKsTa13zFPTrRbc+R+TE2IBOsv8p3JKKybu+m61gOWfU61n4gMjaVDar8Hetw0zuk4nOD5xEhO0F5jxGgEjEVuLt18pZ1tnd6e4KgGNEW3SeEXOtXmzpbItyFG8JHJ9vdiinuN8f/PZDv0iEu+42lhO98PEecFN
+     procedure_id : 2162937524460712273
+     type_code : 12
+     code : |1-
+      
+      // Résumé : Arrête le thread
+      // 
+      PROCEDURE Arrête()
+      
+      bStop = vrai
+      bEnFonction = faux
+      Trace("On demande l'arrêt de l'ui manager.")
+     type : 458752
+   -
+     name : Refresh
+     internal_properties : CAAAAAgAAABkYxCOAWHWSEcmS47+Q4zr76DFeUhRJGaNs29bIcM+i9P48K1hoWenUlLTUcG+n+jT4Jtjp2sXjnWCcDud5gVpkt1ArZhMBRqjw7AWM4YjS6jH+jMDU88Vva+NPKIVwCdEi8l9zIuOl9Q91Q==
+     procedure_id : 2164058017002596776
+     type_code : 12
+     code : |1-
+      
+      // Résumé : Rafraîchit vite l'UI
+      // 
+      PROCEDURE Refresh()
+      
+      bRafrachitVite = vrai
+     type : 458752
+   -
+     name : RafraichitZRTablette
+     internal_properties : CAAAAAgAAACVVNxviTgFZlUI0bIV/uKnME/eZkq9YfpWRyvo2uxYL8z0vHockHNlfqFm5ikiE3Hqcxq4jKarNLw9jjFf+G4xF36L7FSu77iOXBYITfbv2QTqzs44aqFsM6a8/LXVmn1ObsUnReArL6UBveu+rCD3oced3Fz6/3Eek8Ppf7k46V5c2uotgWJuSi8ydEm8nMjdto691oW+swX8I95De2oUAdQj8X6ZnkZ+CelH9xFDUhyI5m/TrO0rzWMGzwWZaiEnSxfhFoOkGTW/Vsslh0EBsPln1Alu4b23g/d2qRdqiQ==
+     procedure_id : 2230144653031962397
+     type_code : 12
+     code : |1-
+      
+      // Résumé : Rafraîchit les ZR de l'ui tablette
+      // Syntaxe :
+      //RafraichitZRTablette (<tabTransfertsEnAttente> est tableau, <tabTransfertsEnCours> est tableau, <tabTransfertsTerminés> est tableau, <tabTransfertsEnerreur> est tableau)
+      //
+      // Paramètres :
+      //	tabTransfertsEnAttente (tableau) : Les transferts en attente
+      //	tabTransfertsEnCours (tableau) : Les transferts en cours
+      //	tabTransfertsTerminés (tableau) : Les transferts terminés
+      //	tabTransfertsEnerreur (tableau) :  en erreur
+      
+      PROCEDURE RafraichitZRTablette(tabTransfertsEnAttente est un tableau de FTPtransfert,tabTransfertsEnCours est un tableau de FTPtransfert,...
+      								tabTransfertsTerminés  est un tableau de FTPtransfert,tabTransfertsEnerreur  est un tableau de FTPtransfert)
+      
+      // File d'attente
+      tabZR est un tableau de FTPTransfert
+      
+      SELON FEN_Principale_Tablette.gnModeZR
+      	CAS ZR_ENATTENTE
+      		tabZR = tabTransfertsEnCours
+      		
+      		// EnAttente
+      		POUR TOUT clTTrans de tabTransfertsEnAttente
+      			TableauAjoute(tabZR,clTTrans)
+      		FIN
+      	CAS ZR_ERREUR
+      		tabZR = tabTransfertsEnerreur
+      	CAS ZR_TERMINE
+      		tabZR = tabTransfertsTerminés
+      	AUTRE CAS
+      		RETOUR
+      FIN
+      
+      ZoneRépétéeSupprimeTout(FEN_Principale_Tablette.SC_Transferts.ZR_Transferts)
+      SI tabZR..Occurrence > 0 ALORS
+      	POUR TOUT clTransfert de tabZR
+      		ZoneRépétéeAjouteLigne(FEN_Principale_Tablette.SC_Transferts.ZR_Transferts,clTransfert.m_nID,clTransfert.m_sFichier,...
+      		clTransfert.m_nType,clTransfert.m_bTélécharger)	
+      	FIN
+      FIN
+     type : 458752
+  procedure_templates : []
+  property_templates : []
+ code_parameters :
+  internal_properties : CAAAAAgAAACVGQgYbalU7DKC3oH4ItDrjtcTHXXV/EuH8q0IbhyQlw==
+  original_name : CClasse1
+resources :
+ string_res :
+  identifier : 0x1fc506b309c05809
+  internal_properties : CAAAAAgAAACm76HWfKGWp33VjXInA4cRlqArlgTTA862QGt72W2ld5Y=
+custom_note :
+ internal_properties : CAAAAAgAAABtB9HWVzrXO2+4NDRVK0vmzaNKrCKqH1DBX30lMmGZ

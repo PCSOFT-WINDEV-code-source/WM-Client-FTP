@@ -1,0 +1,113 @@
+#To edit and compare internal_properties, use WINDEV integrated tools.
+#Internal properties refer to the properties of controls in windows, reports, etc.
+info :
+ name : FI_PULL_TO_REFRESH
+ major_version : 28
+ minor_version : 0
+ type : 8
+ description : ""
+ subtype : 0
+window :
+ name : FI_PULL_TO_REFRESH
+ identifier : 0x24184f7e5a9192df
+ internal_properties : CAAAAAgAAADDjZUBo/drrqjkO6ZIu7OaUS6roBOa/nekNQ+vN43aJXJTGaX106vYEno/Txlq/R/cw3fFK6voHxZ8C0iGM3u3b5uLPGhn4w3r7mL5T9I6mDFzh6OLqnrvLMDxGJFaKgZGa1VqzYQXRUAlCLGPy6SnKt4oS4vOnT+/qZ+/FTVw2nX20KQX2Y0/FOxHaVhmHATmku9Vo5ITY3PRp9cxBEzxPTKsyh+qDWzSRdZXFIs2yoWH+AIYT8s4WFkb4ulhKUeecDa1YV4fOQ+DNJPZH0k/efV1QjriJawpXq2HhSBB8KppwItFgz1dTNFqL5IcaVi2k88o3N9ttIRdkjxqxqXp3Sbomf698hdGMZLxXId+AYN8n/Quy0KGGcaJKRe/Vyyj4STY21swhBGL5mYDZlxAef6mFOHq7xgLRcIRSNgu6riikTEjJDFZc3ozmtZ4clCYeya95sz9GrjmJpZk92rNrEcE1bWboFCH6TqJvMA/YT0PHqBcPSXaYp5lgVTji4qbqEAMmL6N+vy9kadhFvDcFaqG+idZFrnI9UEAes1hq8Gq23wcBrs5iWQi9EgqRjx3uADnAl7dxeziGlTb/VayDnj1qkU38/cokayS2Bhmere24+FM/ynz1fnUrxHg/0+3W86XSnCjN+G/4LmGbo8DFwaRpMNR8GxsLCXbuzXyjnK/RhTWiQv9XbafTbq7l0QwyFz44meX4PhqwJe2NdIsgATFCmTlRsGr676HF6E4EI5x15bkJNCMAvX2RSuoUsuRCVJP2yDc+JvcpZDG4yiXgJsICFkAjwNQg6TeyeJi7W14BSTVVwkio4cCIyhLx4zBWfACG1qFPYXNKaEZ71NHcBVlzVgKSeFUuAo3K4hiyj0wYhjH6/342WCtTumyxi3GTmlAdBkAu3JonRWsMWP00/hqT373TwCnQjGV37lVpSAsDUlVxr8gKItMFc/QYlTcue4WUuM3WU+rb6tCCMvr+fLWgsCyibyw5sIz5n31lstYfY4QxjyLQPgR4k//mMbbXwPDQlynAOTGs7la/KIaO6tLhB+k5mfvpnUyQmktZt/I+WamR97ULGkBQSu4eoPem8TEoO1e7ZhWP2Q=
+ properties :
+  width : 320
+  height : 56
+ controls :
+  -
+    name : FI_PULL_TO_REFRESH
+    identifier : 0x24184f7e5a9292df
+    internal_properties : CAAAAAgAAAC1YN9gemMjgFRjzTmmffibAXouXtWsoVoIkb1qnK4J5qogA2EdHAY+enLFAFY+KjhmqU8YnuZpCVc/u0DsJ0K3rkdI+DcSN9pspV/qpk67oyw9ZdCBgVDEk/VKep4ht9+0kX+JVtM6yi+4xPEys0//my2jbzzuToIdpXRNH1Wb/nQZ7jEAINVIgVL1xy/DQBtsqcSXg2NvdLYfld//Ip1TEmp/InH7uD/1AiKpoa2lV6wTNDbDLgI+fhlTciauAje+o59DPeQ6ruR3Jz9Pz92FthOC9t1LuWwHX0ugg9m4MSVNpZ67fcRwhlMhiGrLjk5bE77/7PwqWcp6eLkqaWsbiE32AD8z8NbJSlKzLYgbkQIZAyegVAS+Nkakg3Mzff/XWUixvKlA+AW3WE8orHWDkUZ7yUzzd4cLfLnQmTuwkaUTbI1xQqy5o4qzjF06H9RKDcruWxkq3ACbgVELdhIKEvEawnGaYD1Fz/TqbuqOZxn2gtZY5vrt7EuB1Ah2H0GZ/nZYnCers2Q8QyFIS1JhF813Q5XGFaFW7317GUMWEZnu3B7pcQPRoBSic04p8p2bzLFcXYDzvCFT/umrZ4lGyAYh4QgdAUAbk13RRwZBCjQe11pv+Ly5MUiFxt8+omeF6Tt3NV/0/IB5Bn2Xwy69hESlub7+grZA60yDgoTGXkSX8akWx32x3vgSB3Q0f6UhiH1+g/OOwUZeJVge43ba8eXic79kQZJFfe140a9BeTLyBCFub5I7VVFahoqLNGhU/fAgEA==
+    properties :
+     width : 320
+     height : 56
+    controls :
+     -
+       name : NativeCirculaire
+       identifier : 0x24184f7e5a9692df
+       internal_properties : CAAAAAgAAAB9BJ5TNp2/AcpSoNXDUnheo3oePs6A5Xm+ic6bSDBzSk3KvybPi9j4MvaJjaIuVjOrBG4JX1M7wJ54Sb9TfYqiusQ9bbQYip92RmN4wE3sVuDWbQJuSpNyCbE6V4j0JhmVqmctaqdC8RLyZPgwjRmUnHVne9gHmBhpcn+91VvzrNjV8aLzw2FQoScYXYDi3WwzE/z0QlR49uPuWmg+vzK+8GspHWP8nP/jjf26Jhsio0k0jXHL7UxLoYR9DJiGRHDSqwi2Q+UO3aRI5rkEddC1dJrzxUj+5B92GgP4fzFg3+hbqUPK0YwmGvql2+olJcXtJAJro8K5jJGwXGZdNcG4oYs5VsLjoTm3koxidIg9/JfL7UtqoSGn9ktoCRkPZQ84mhPp3vpfiVRhDZDk3vxAdjpyTX01t6XS8QfpLnXPGeFEtO9t+gVw/Xi/mxO1RUtsZ/oAROCzEueNIYEtxVtBGr9uBQ==
+       properties :
+        x : 148
+        y : 16
+        width : 24
+        height : 24
+       type : 113
+       code_elements :
+        type_code : 136
+        p_codes :
+         -
+           type : 18
+         -
+           type : 210
+         -
+           type : 211
+         -
+           type : 212
+    type : 32
+    code_elements :
+     type_code : 70
+     p_codes :
+      -
+        code : |1+
+         PROCEDURE MaFenêtre()
+      -
+        code : |1-
+         
+        type : 231
+      -
+        code : |1-
+         
+        type : 232
+      -
+        code : |1-
+         
+        type : 233
+ menu :
+  name : _Menu
+  identifier : 0x235e288300b26875
+  internal_properties : CAAAAAgAAAAvOp0navZxqmKKmKwfL7DPcs4Gv0TUsdnnrxbOIrK/nAQP5fFaEW/xROKphwl9LN/UxtgHqV6InWboBNwsEQX42U55HQMf8e5MNRaj9NfI+NZpWI98IDQJTQ1oycI3+5AYL5NPd1WfvS2Cu5FB+3M+Jr85udA09nA0Jb7q1YR9iHv0QgGaPWke1pcA3DU2xPcSZDFvCD3fBtMzrAO4kFPYTOaEF1axLNYhLqQlKp08yiQLUXVRJkzriRN+CvWa8Q1U4xeg6UG9SjSo/kGQIE+GSChi/Wa9SqQ+SQN7rbEtbQVxc4ARWe5stni6evpW6BiGh/VPwxXHypLQ7uJHIZhXDhnBLMWOW+e+Hpf5jukiXiOr1HV/oTTCHQrgxoJJOengKQrQ1chI6sHjGcaNQTzh+Stjn7yU8ttKm1KwVimOwh9RBRrcB2iY9lA7v4+2KJojrzp1IIglRaApHtRScXoOoLXqsXtnpjPZtNjqfo3tpUI/dGzo1m3Jnu0IqNQtTOlhsJo/PqwmhK1b+eY=
+  options : []
+ languages :
+  - fr-FR
+  - en-GB
+ popup_menus : []
+ message_bar : {}
+ actionbar : {}
+ code_elements :
+  type_code : 71
+  p_codes : []
+ code_parameters :
+  internal_properties : CAAAAAgAAACVGQgYbalU7DKC3oH4ItDrjtcTHXXV/EuH8q0IbhyQlw==
+  original_name : FI_SansNom1
+resources :
+ string_res :
+  identifier : 0x14184f7e027792df
+  internal_properties : CAAAAAgAAACm76HWfKGWp33VjXInA4cRlqArlgTTA862QGt72W2ld5Y=
+  strings :
+   -
+     text :
+      fr-FR : Dernière mise à jour le %1 à %2
+     index : 0
+   -
+     text :
+      fr-FR : JJ/MM/AAAA
+     index : 1
+   -
+     text :
+      fr-FR : "HH:MM"
+     index : 2
+   -
+     text :
+      fr-FR : Tirer pour rafraîchir
+      en-GB : Pull to refresh
+     index : 3
+   -
+     text :
+      fr-FR : Relâcher pour rafraîchir
+      en-GB : Release to refresh
+     index : 4
+custom_note :
+ internal_properties : CAAAAAgAAAC68/W0/adbG0nFCRhrE42B5HRnbDzVHaz86sSQyxlBk7I=
+rad :
+ internal_properties : CAAAAAgAAABoAN7PLpwJW3EiA7WVZdCA5EwrCA1rvutcDHooMWKe

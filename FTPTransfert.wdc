@@ -1,0 +1,208 @@
+#To edit and compare internal_properties, use WINDEV integrated tools.
+#Internal properties refer to the properties of controls in windows, reports, etc.
+info :
+ name : FTPTransfert
+ major_version : 28
+ minor_version : 0
+ type : 4
+ description : ""
+ subtype : 0
+class :
+ identifier : 0x1e032d850050ff3a
+ internal_properties : CAAAAAgAAAB2/vstTMCJbS/hlxjFxirSqKvCUuv8YxgpWyl7S3iA
+ code_elements :
+  internal_properties : CAAAAAgAAADZ6Lfi1rxTZmdKrHneNiMNMfGfVOpPFZBlhyHKnRzu8aO0ZSKO8vDfBipiWMe25XLyBoVT6iLo2wGDTJGXLfXVTcec/NlAhr/f4J950swm
+  type_code : 10
+  p_codes :
+   -
+     internal_properties : CAAAAAgAAAD7hwOBqRcI1VvMOW/YnGKtMjRmRF8nKGFtAmRa5pl/CciFTZWsa0Gf6nEaa3WEaQTrn+nn3GUab+AZPUaPt/fkfdFF7RyLxctB+kYrpUPqYZtAUfulw0XsTYZT7UtTAtR5tYKA8rOvSj5oyONG5z1BnFNRN8Hsce2IQStye2R09w==
+     code : |1+
+      FTPTransfert est une classe
+      	m_nID					est un entier
+      	m_sFichier 				est une chaine
+      	m_nType					est un entier
+      	m_sRepDestination		est une chaine
+      	m_bTélécharger			est un booléen
+      	m_nStatut				est un entier
+      	m_sErreur				est une chaine
+      	
+      	// Etat du transfert
+      	m_nOctetsTotal			est un entier
+      	m_nOctetsTransférés	est un entier
+      	
+      	// Constantes des statuts des transferts
+      	CONSTANTE
+      		STATUT_ENATTENTE		= 1
+      		STATUT_ENCOURS			= 2
+      		STATUT_ANNULE			= 3
+      		STATUT_TERMINE			= 4
+      		STATUT_ERREUR			= 5
+      	FIN
+      Fin
+      
+     type : 131072
+  procedures :
+   -
+     name : Constructeur
+     procedure_id : 2162622295327244090
+     type_code : 27
+     code : |1+
+      PROCEDURE Constructeur()
+      
+     type : 589824
+   -
+     name : Destructeur
+     procedure_id : 2162622295327309626
+     type_code : 28
+     code : |1+
+      PROCEDURE Destructeur()
+      
+     type : 655360
+   -
+     name : LanceTransfert
+     internal_properties : CAAAAAgAAACGV/03hD6Bz/cL5gLW5Q23DcnyuARZEeiJcZW5NLt9vB22nXBi3tvfsqMUHBKE1X1PlENDbRY8idez29KZWivkh8Ii826G8gb1eCUXA7VP4nvHxbRm2/1Ky4lH9vorDAplBn84I5StptWftYcHS8MFW5/jS9OkFs2BDbG+dHkikV2XgVaZpH3oCP7hGbTmAsVeXe1zcKeAsIWODIJcd+vsAUnF
+     procedure_id : 2162646518998437386
+     type_code : 12
+     code : |1+
+      
+      // Résumé : Lance le transfert
+      //
+      PROCEDURE LanceTransfert()
+      
+      Trace("Lancement d'un thread de transfert : TRANSFERT_"+ m_nID)
+      
+      Objet:Run()
+     type : 458752
+   -
+     name : Run
+     internal_properties : CAAAAAgAAAAtCX8Nwio/n9qGXV2CeN/F5FN79xSWpQKKsEYGYClLfYr7jWGtthF7YDXeM20n4WFOVHfWuuj9kExEaSfeNFgtEdkT6rZ1isDGdBsvBMGVy+IYr6uVUTdaPaJ0l6X5/mMYoRi/M++nu5whhff4X0Bzjg9Srwlbe6ljZDyreP8V9O3K3lCmj3az7/n1SiAm1deerr0/Avan4xWouJ0eMarjtDUQLfrjhE5T//pv2VnYwlT3BbCFxC2AIhzz6JupbH/ae5H/dc1OQcv4qaAfVlB+ic9pHDY1NbGiOKvQyuHVaJ/KXd52N9iJNWnqqEKQAKesiRdiZ94gvN+d1oHYeA+7GpMSbcrpeo0VW1cbk0hKS0gbdKWO4KokuQGHYSH63Kr3gUmd/O3Tyb0tbJrjq7lIpB9rRZqMQUhDqvNENsloC3o7WhD9Wa4=
+     procedure_id : 2162646566243154098
+     type_code : 12
+     code : |1+
+      
+      // Résumé : Thread du transfert
+      // // Procédure automatique :
+      // La procédure est exécutée manuellement, lors d'un appel dans le code
+      // Elle s'exécutera dans un thread (sans avoir besoin d'appeler la fonction ThreadExecute), sans utilisation de HFSQL
+      // 
+      
+      PROCEDURE Run()
+      
+      bRes 			est un booléen
+      nConnexion 		est un entier
+      
+      // Incrémentation du nombre de transfert en cours
+      gnNbTransfertsEnCours++
+      
+      // Changement de statut
+      m_nStatut = STATUT_ENCOURS
+      
+      // On tente une connexion à part
+      nConnexion  = FTPConnecteConfiguration()
+      
+      // Si on ne peut pas on garde l'ancienne
+      SI nConnexion = -1 ALORS
+      	Trace("double connexion impossible : " + ErreurInfo())
+      	nConnexion = gnIDConnexion
+      SINOn
+      	Trace("double connexion effectuée")
+      FIN
+      
+      Si nConnexion <> -1 ALORS
+      	 Trace(ChaîneConstruit("Démarrage du transfert de %1 vers %2 avec l'id %3",m_sFichier,m_sRepDestination,m_nID))
+      	 
+      	 SI gnIDConnexion = nConnexion ALORS
+      	 	// Check si l'ancienne connexion n'a pas été coupé si on en a besoin
+      		 CheckConnexion() 	
+      	 FIN
+      	 
+      	 // Lancement du transfert	
+      	 SI m_bTélécharger ALORS
+      	 	bRes = FTPRécupère(nConnexion,m_sFichier,m_sRepDestination,GèreTransfert)
+      	 SINON
+      	 	bRes = FTPEnvoie(nConnexion,m_sFichier,m_sRepDestination,GèreTransfert)
+      	 FIN
+      	 
+      	 // Changement de statut
+      	 SI bRes ALORS
+      	 	// Si on avait 2 connexions on ferme la seconde
+      	 	Si gnIDConnexion <> nConnexion ALORS
+      	 		FTPDéconnecte(nConnexion)
+      	 	FIN
+      	 	m_nStatut = STATUT_TERMINE
+      	 	Trace(ChaîneConstruit("Transfert de %1 terminé.",m_sFichier)) 
+      	 SINON
+      	 	m_nStatut = STATUT_ERREUR
+      	 	m_sErreur = ErreurFTP()
+      	 	Trace(ChaîneConstruit("Erreur lors du transfert de %1 : " + ErreurInfo(),m_sFichier))
+      	 	ToastAffiche(m_sErreur,toastLong)
+      	 FIN
+      	 
+      	 gnNbTransfertsEnCours--
+      SINON
+      	m_nStatut = STATUT_ERREUR
+      	m_sErreur = ErreurFTP
+      	Trace(<§@1cd27ae1000630230002§> + ErreurInfo)
+      	Erreur(<§$0000§>,erreurftp)
+      FIN
+     type : 458752
+   -
+     name : GèreTransfert
+     internal_properties : CAAAAAgAAACHCbwJhdVAnvfXCi7QSkzS2nK7oXxX8+/0VBQkTRNKfHVnfpXmVsEaaFgbUk43zutH+iM9nCWq8ShIQBPSqdSr9fxEAyobxpZyn3B+Xd6fxi0VY1JNwbSN2l/AYzgKDNeobMPAyh3uBbF4jeYS9U8mQfHAFwzJXjnpv3L6iZtaTk8ARiMrNtBrkFmU/nQ6ISAmn4V8agoGzhudezPA5jJSNxdn8IfuOZ7Nhx3JtZ6ATMKI2CJIQiqJDauHnlINwIOxb1m/66gShlmlYvDstsfxoF8HW6nYREtrPNtzGbeIWudQSoBlLVgvJc0=
+     procedure_id : 2162647403761841138
+     type_code : 12
+     code : |1-
+      
+      // Résumé : Callback appelé par le transfert
+      // Syntaxe :
+      //[ <Résultat> = ] GèreTransfert (<nTailleTotale> est entier, <nTailleTransférée> est entier)
+      //
+      // Paramètres :
+      //	nTailleTotale (entier) : Taille totale du fichier
+      //	nTailleTransférée (entier) : Taille transférée
+      
+      PROCEDURE GèreTransfert(local nTailleTotale est un entier, local nTailleTransférée est un entier)
+      
+      //Trace(ChaîneConstruit("%1 - %2/%3",m_sFichier,TailleVersChaîne(nTailleTransférée),TailleVersChaîne(nTailleTotale)))
+      
+      // Gestion de l'annulation
+      si m_nStatut = STATUT_ANNULE ALORS
+      	gclUIManager.Refresh()
+      	//Trace(ChaîneConstruit("Transfert %1 : on me demande de m'arrêter alors je m'arrête.",m_nID))
+      	renvoyer faux
+      FIN
+      
+      SI nTailleTransférée >= nTailleTotale ALORS
+      	///////////////////////////////////////////////////////////////////////////////////////////
+      	// Transfert terminé
+      	m_nStatut = STATUT_TERMINE
+      SInON
+      	///////////////////////////////////////////////////////////////////////////////////////////
+      	// Transfert en cours
+      	m_nStatut = STATUT_ENCOURS
+      	m_nOctetsTotal = nTailleTotale
+      	m_nOctetsTransférés = nTailleTransférée
+      FIN
+      
+      // Demande à l'UIManager de rafraîchir vite
+      gclUIManager.Refresh()
+      
+      renvoyer vrai
+     type : 458752
+  procedure_templates : []
+  property_templates : []
+ code_parameters :
+  internal_properties : CAAAAAgAAACVGQgYbalU7DKC3oH4ItDrjtcTHXXV/EuH8q0IbhyQlw==
+  original_name : CClasse1
+resources :
+ string_res :
+  identifier : 0x1e032d85004dff2a
+  internal_properties : CAAAAAgAAACm76HWfKGWp33VjXInA4cRlqArlgTTA862QGt72W2ld5Y=
+  strings :
+   -
+     text :
+      fr-FR : Impossible de se connecter au serveur.
+      en-GB : Could not connect to server.
+     index : 0
+custom_note :
+ internal_properties : CAAAAAgAAABtB9HWVzrXO2+4NDRVK0vmzaNKrCKqH1DBX30lMmGZ

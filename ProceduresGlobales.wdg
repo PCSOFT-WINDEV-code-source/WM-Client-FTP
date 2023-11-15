@@ -1,0 +1,552 @@
+#To edit and compare internal_properties, use WINDEV integrated tools.
+#Internal properties refer to the properties of controls in windows, reports, etc.
+info :
+ name : ProcéduresGlobales
+ major_version : 28
+ minor_version : 0
+ type : 7
+ description : ""
+ subtype : 0
+procedure_set :
+ identifier : 0x1cd27ae100073023
+ internal_properties : CAAAAAgAAABGLu41kG7fjQV3iS4F72qmnKaNh5694reolNKIW0iw
+ code_elements :
+  internal_properties : CAAAAAgAAADcUJfNY52ur41MOrdS3CCuvU/bYDKqC6kZYPaVbAZptBsgBgowjfYhpBw7FVz/VxhFKna3nesf9QMoTEyZ+fwASAj/Qh1lNyIarxLaobu1jeeodsrcO4xMPYPPwFTc/3Mwak3t7xB89LtC2hlANgdtjs9fXTx0YidRzyuCF+vOVZKJ0pIb9joe9A==
+  type_code : 31
+  p_codes :
+   -
+     internal_properties : CAAAAAgAAACtCmE3mH1TgdJwK22RfG9WZB9pGud2+L10ThIVSzZz/9dOBTABmLHwl280J6mgH0ROBj9U68LGmY8jPIL4NlZSVbtTi91UCPOHKEZGGxcPMer4OXkJ4UdCoKAv5v2To3xza5JGYSnPAn+D67hov5WVH2VMDyZz4uCWwI9ceViEJpC6rW2pmU82sVd7tSc7l2G7yLmZlaAlqs7agWwlHMx4NF+bgpuWECBXE9WVVJWjqhAz2fdx+1MNZJivfxafMGo5tb2MC5yyKKmW3bou
+     code : |1-
+      
+      // Erreurs FTP
+      CONSTANTE
+      	FTP_CONNEXION_INEXISTANTE = "La session FTP spécifiée n'existe pas ou la connexion au serveur a été perdue."
+      	FTP_DELAI_ATTENTE_DEPASSE = "Délai d'attente dépassé."
+      	FTP_DERNIERE_REPONSE_SERVEUR = "La dernière réponse du serveur est"
+      	FTP_ECHEC_COMMANDE = "La commande FTP a échoué."
+      	FTP_ECHEC_CONNEXION = "Echec de la connexion au serveur FTP "
+      	FTP_ECHEC_MODIFICATION_REP_COURANT = "Impossible de modifier le répertoire courant en"
+      	FTP_ECHEC_RECUPERATION_REP_COURANT = "Impossible de récupérer le répertoire courant."
+      	
+      	
+      	FTP_SECURITE_AUCUNE = 1 
+      	FTP_SECURITE_FTPS = 2 
+      	FTP_SECURITE_SFTP = 3 
+      	FTP_SECURITE_FTPES = 4
+      FIN
+      
+      gtabErreursFTP est une tableau de chaine = [FTP_CONNEXION_INEXISTANTE,FTP_DELAI_ATTENTE_DEPASSE,FTP_DERNIERE_REPONSE_SERVEUR,FTP_ECHEC_COMMANDE,...
+      											FTP_ECHEC_CONNEXION,FTP_ECHEC_MODIFICATION_REP_COURANT]
+      											
+      gbEnModeDebug est un booleén = faux
+      
+      //COUL_BLEU_1 est un entier = RVB(74,144,226)
+      //COUL_BLEU_2 est un entier = RVB(33,114,206)
+      
+      //COUL_GRISE est un entier = RVB(221,221,221)
+     type : 720896
+  procedures :
+   -
+     name : ChargeConfiguration
+     internal_properties : CAAAAAgAAAAJ6449ue+gSEYUPNpQ9Z3TI2EjOojHw7UHEoEdPC9fg1RqjLhJg6baGUIiSz7bZQ+LqR3g0KI5goZ/LI45yiW62Iwf0tI4GPQpMbzSS/9dO97mIGzIiQjfJFPW1AOqLAwhodUqaFgBOcojD8lj23AOTs18uCjy07NP6YAppWnx9aXei3qVPAF0T3Iwj9H0bg==
+     procedure_id : 2076857656756783695
+     type_code : 15
+     code : |1-
+      
+      // Charge la dernière configuration utilisée
+      PROCEDURE ChargeConfiguration()
+      
+      // On regarde quel est la dernière configuration utilisée
+      gnIDConfiguration = ChargeParamètre(PREF_IDCONFIGURATION,0)
+      
+      // On récupère la configuration
+      HLitRecherchePremier(Configuration,IDConfiguration,gnIDConfiguration)
+      SI HTROUVE(Configuration) ALORS
+      	gstConfiguration.sNom = Configuration.Nom
+      	gstConfiguration.sNomServeur = Configuration.NomServeur
+      	gstConfiguration.nPort = Configuration.Port
+      	gstConfiguration.nDelai = Configuration.Delai
+      	gstConfiguration.bAuthentification = Configuration.Autentification
+      	gstConfiguration.sUtilisateur = Configuration.Utilisateur
+      	gstConfiguration.sMotDePasse = Configuration.MotDePasse
+      	gstConfiguration.bPassif = Configuration.Passif
+      	gstConfiguration.nSecurite = Configuration.Securite
+      	
+      	SI Configuration.Repertoire = "" ALORS
+      		gstConfiguration.sRepertoireFTP = "/"
+      	SINON
+      		gstConfiguration.sRepertoireFTP = Configuration.Repertoire
+      	FIN
+      	
+      	Si Configuration.RepertoireLocal = "" ALORS
+      		
+      		<COMPILE SI TypeConfiguration=Android>
+      			gstConfiguration.sRepertoireLocal = ["/"] + SysRepCarteStockage() + ["/"]
+      		<SINON>
+      			gstConfiguration.sRepertoireLocal = ["/"] + fRepDonnées() + ["/"]
+      		<FIN>
+      		
+      		
+      	SINON
+      		gstConfiguration.sRepertoireLocal = Configuration.RepertoireLocal + ["/"]
+      	FIN
+      FIN
+     type : 458752
+   -
+     name : Deconnecte
+     internal_properties : CAAAAAgAAABVDcUjA7PgBTmS6Hle9zxyj/SfzyFIFIJUaL/GK0PiyVnPMEy2VJ921kN8eVCkk9GvmVVjenTP9DhQ6H0hX4iS3D9C8Jbwv7B7HlwN9ROM+2YGmeYIwheGbbMztEgOk01h1Fiho/wAdJwoQSQ6AIw+ZoYZH+iZneObEKwgjGUMhqCASHlEYgxPyR9jq//0vdXWTxJjtHPtC6FIMQmqMM6eg8moe1cSrWtD4EPuUYqGtUnUXiStfD6ATvMXJRx3Mysv48/v+rEiqtvT/E23dSU5rQ8YT4S7STnSyEms4BLUM51OaWl5I1Z0o3iNKOG2Ps0=
+     procedure_id : 2076871104300487295
+     type_code : 15
+     code : |1+
+      // Résumé : Se déconnecte du serveur FTP
+      // Syntaxe :
+      //[ <Résultat> = ] Deconnecte ()
+      //
+      // Paramètres :
+      //	Aucun
+      // Valeur de retour :
+      // 	booléen : Vrai si la déconnexion a été faite
+      //
+      // Exemple :
+      // Indiquez ici un exemple d'utilisation.
+      //
+      PROCEDURE Deconnecte()
+      
+      SI gnIDConnexion = -1 _ou_ FTPDéconnecte(gnIDConnexion)  ALORS
+      	gnIDConnexion = -1
+      	gsRepFTPEncours= ""
+      	
+      	RENVOYER Vrai
+      SINON
+      	gbEnErreurDeConnexion = Vrai
+      	
+      	gnIDConnexion = -1
+      	gsRepFTPEncours= ""
+      	
+      	RENVOYER Faux
+      FIN
+      
+     type : 458752
+   -
+     name : ChangeConfiguration
+     internal_properties : CAAAAAgAAACFe/82et9/lPjXQUvsCQxL8H47aVdBW3x7jYHBHeze0OrkwECRReZyYRnQ6jrcpKAoGzInaK/++omWNQnsDiivMIy+dNo2cGdV0DjevuSJba9IzvhVfOlN/TvxUInpqUS6S1Mqc7N6GXNJsh1f1sQpIqSNDS2YREon/AT1il3dsY+bgMpWDVUdMoqJF/TCIgVv2QnEbKYw9MpqNLYErw==
+     procedure_id : 2076883314910753417
+     type_code : 15
+     code : |1-
+      
+      // Change la configuration en cours
+      PROCEDURE ChangeConfiguration(nID est un entier = 0)
+      
+      Si nID = 0 ALORS
+      	HLitPremier(Configuration)
+      	SI pas HEnDehors(Configuration) ALORS
+      		nID = COnfiguration.IDConfiguration
+      	FIN
+      FIN
+      // sauvegarde de la préférence
+      SauveParamètre(PREF_IDCONFIGURATION,nID)
+      
+      // Changement de la configuration
+      gnIDConfiguration = nID
+      
+      // Chargement de la configuration
+      ChargeConfiguration()
+     type : 458752
+   -
+     name : sDeterminerRepPereDistant
+     internal_properties : CAAAAAgAAADXMaOD+aGoujlIn9PMq9/yQR0gzAdX4LWztB38oNIMjPiNl/tIfV2wOx/cfHrczoLGuNSsYQOBX0KlK/tbJ81MxpifFtPmJ1voS0qAF5jukDyCAwgseY/c5OIPL042GnqYZASImF0Bj6dfir9TDLv8OWBhFkUD2O/iPu2yp++TGkaBxnoX8VNykIFJOOO92ssUcAYEFZSVCLijWnKmkc0/AGKpMIhUKU9LdSgoWHwN8zyn0G3acLCC/NP6+0nv2sFS
+     procedure_id : 2076932019843169747
+     type_code : 15
+     code : |1+
+      // Résumé : Détermine le répertoire parent d'un répertoire distant
+      // Syntaxe :
+      // [ <Résultat> = ] sDeterminerRepPereDistant (<psRepertoire>)
+      //
+      // Paramètres :
+      // 	psRepertoire : Le répertoire distant
+      // Valeur de retour :
+      // 	chaîne ANSI : Le répertoire parent
+      //
+      Procédure sDeterminerRepPereDistant(psRepertoire)
+      
+      sRep est une chaine
+      sRep = ComplèteRep(psRepertoire)
+      sRep = Remplace(sRep, "\", "/")
+      sRep = sRep[[1 a PositionOccurrence(sRep, "/", 2, DepuisFin)]]
+      
+      Si sRep = "" ALORS
+      	sRep = "/"
+      FIN
+      
+      renvoyer sRep
+      
+     type : 458752
+   -
+     name : sDeterminerRepPereLocal
+     internal_properties : CAAAAAgAAADXMaOD+aGoujlIn9PMq9/yQR0gzAdX4LWztB38oNIMjPiNl/tIfV2wOx/cfHrczoLGuNSsYQOBX0KlK/tbJ81MxpifFtPmJ1voS0qAF5jukDyCAwgseY/c5OIPL042GnqYZASImF0Bj6dfir9TDLv8OWBhFkUD2O/iPu2yp++TGkaBxnoX8VNykIFJOOO92ssUcAYEFZSVCLijWnKmkc0/AGKpMIhUKU9LdSgoWHwN8zyn0G3acLCC/NP6+0nv2sFS
+     procedure_id : 2076932019843235626
+     type_code : 15
+     code : |1-
+      // Résumé : Détermine le répertoire parent d'un répertoire local
+      // Syntaxe :
+      // [ <Résultat> = ] sDeterminerRepPereLocal (<psRepertoire>)
+      //
+      // Paramètres :
+      // 	psRepertoire : Le répertoire local
+      // Valeur de retour :
+      // 	chaîne ANSI : Le répertoire parent
+      //
+      Procedure sDeterminerRepPereLocal(psRepertoire)
+      
+      sRep est une chaine
+      sRep = ComplèteRep(psRepertoire)
+      sRep = sRep[[1 a PositionOccurrence(sRep, "/", 2, DepuisFin)]]
+      renvoyer sRep
+     type : 458752
+   -
+     name : ErreurFTP
+     internal_properties : CAAAAAgAAAAStdUUzL8cgnI3k/e1T/B5AJhLTaLNoZyORPIvenVTsd+1qR2ArZYQX1CBmM1P7io9HIaaHbQVxbdzyJjaB9boGrtd/+WtxxuFjmcE+6IvUQfMH3P3usI7f7elY/1vphZrzFgm+e1034ya2twwPV1ZQ8CRIOc31VA+lr1RabNCSLNkuTf87155auHrX/jWC8uGbFpmY5Q2F0ruHaKsH4qrKdUgVjc0w/i+jM6PcMpxvA6CTWAcJhnpO9FUYt5PFL4rIq9oANNZWdgZuvDl5ESTvB7XzHMeeQ==
+     procedure_id : 2162551887927958477
+     type_code : 15
+     code : |1-
+      
+      // Résumé : Traduit l'erreur renvoyé par erreur info
+      // Syntaxe :
+      //[ <Résultat> = ] ErreurFTP ()
+      //
+      // Paramètres :
+      //	Aucun
+      // Valeur de retour :
+      // 	chaîne : L'erreur traduite
+      //
+      PROCEDURE ErreurFTP()
+      
+      sErreur 			est une chaine = ErreurInfo()
+      sErreurFR			est une chaine = ""
+      sErreurTraduite		est une chaine = ""
+      
+      SI nation() <> nationFrançais ALORS
+      	// Recherche de l'erreur
+      	pour tout sErreurFTP de gtabErreursFTP
+      		SI ChaîneOccurrence(sErreur,sErreurFTP,SansCasse) > 0 ALORS
+      			sErreurFR = sErreurFTP
+      			sortir
+      		FIN
+      	FIN
+      	
+      	// Traduction
+      	Selon sErreurFR
+      		CAS FTP_CONNEXION_INEXISTANTE
+      			sErreurTraduite = <§@1cd27ae1000630230006§>
+      		CAS FTP_DELAI_ATTENTE_DEPASSE
+      			sErreurTraduite = <§@1cd27ae1000630230007§>
+      		cas FTP_ECHEC_COMMANDE
+      			sErreurTraduite = <§@1cd27ae1000630230008§>
+      		cas FTP_ECHEC_CONNEXION
+      			sErreurTraduite = <§@1cd27ae1000630230009§>	
+      		CAS FTP_ECHEC_MODIFICATION_REP_COURANT
+      			sErreurTraduite = <§@1cd27ae100063023000a§>
+      		CAS FTP_ECHEC_RECUPERATION_REP_COURANT
+      			sErreurTraduite = <§@1cd27ae100063023000b§>
+      		AUTRE CAS
+      			sErreurTraduite = sErreurFR
+      	FIN
+      SINON
+      	sErreurTraduite = sErreur
+      FIN
+      
+      renvoyer sErreurTraduite
+     type : 458752
+   -
+     name : Connecte
+     internal_properties : CAAAAAgAAAC4n9K06eiVadGttUcJHAmjateX5AxwOT1JNUBZMikuPpYt6S7Z2iqg8OzokXxjnlTFTqLBkTLdZ/eNPo6dCfJLeNnBTHEMMb3F+oLMqGfAuR9dkQE4gtfvnZ87T+zC29vdpVhQ4ADY81xDJaIxWMDCkMvxx6TZlfSOEDzmhcQ2SSknMh8kaVZh/EbwAYq8Wp4jO+0VdaAXERAuP9DjhT1XVC1Y7qg0h3Bwm3rlcH7N4hV18FAo3d9EB+TnmydfzVtPqPigvusd0ZvPT0Hj8C7A+p3L5FRqeY2CwXNUhALYwUN7vB4Iqvtp9PHfkXNjfApC/RE68QbiKy912zZ715lMTvJso/0ZenO8ysNpnkfItgvDRNYhYJUYANRqSzLanP01eYEerBjN+VMTsKYy17itdtagK5p7ChbNnvPmZfuZuxJ6eKI9Wg==
+     procedure_id : 2162652012262757107
+     type_code : 15
+     code : |1-
+      
+      // Résumé : Crée une connexion au serveur FTP
+      // Syntaxe :
+      //Connecte ()
+      //
+      // Paramètres :
+      //	Aucun
+      // Valeur de retour :
+      // 	Aucune
+      //// Procédure automatique :
+      // La procédure est exécutée manuellement, lors d'un appel dans le code
+      // Elle s'exécutera dans un thread (sans avoir besoin d'appeler la fonction ThreadExecute), sans utilisation de HFSQL
+      // 
+      // Traitement automatique des exceptions :   exécuter le bloc de code CAS EXCEPTION:
+      //
+      
+      PROCEDURE Connecte()
+      
+      Trace("Connexion à " + gstConfiguration.sNomServeur)
+      
+      // SI on n'est pas connecté
+      SI gnIDConnexion = -1 ALORS
+      	gnIDConnexion = FTPConnecteConfiguration()
+      FIN
+      
+      SI gnIDConnexion <> -1 ALORS
+      	gsRepFTPEncours = gstConfiguration.sRepertoireFTP
+      	gsRepLocalEncours = gstConfiguration.sRepertoireLocal
+      	
+      	// Vérification de la disponibilité de CMOD pour la modification des droits sur le serveur
+      	SI gstConfiguration.nSecurite = FTP_SECURITE_AUCUNE ALORS
+      		<COMPILE SI TypeConfiguration=Android>
+      			sReponse est une chaine
+      			SI PAS FTPCommande(gnIDConnexion,"SITE help", sReponse) ALORS
+      				gbCMODDisponible = Faux
+      			SINON
+      				gbCMODDisponible = (ChaîneOccurrence(sReponse,"chmod",SansCasse) > 0)
+      				Trace(sReponse + " || " + gbCMODDisponible)
+      			FIN
+      		<SINON>
+      			gbCMODDisponible = Faux
+      		<FIN>
+      	SINON
+      		gbCMODDisponible = Faux
+      	FIN
+      	
+      	
+      	
+      	Trace("Connexion effectuée.")
+      	
+      	retour
+      SINON
+      	gbEnErreurDeConnexion = vrai
+      	Erreur(<§@1cd27ae1000630230001§>,ErreurFTP)
+      	Trace(<§@1cd27ae1000630230002§> + ErreurInfo)
+      	
+      	retour
+      FIN
+      
+      
+      CAS EXCEPTION:
+      	trace("Exception de connexion : " + ExceptionInfo())
+      	gbCMODDisponible = faux
+     type : 458752
+   -
+     name : MetsAJourNomConfiguration
+     internal_properties : CAAAAAgAAAAoObLsrFtXx7DztR3bI5FBWAffsKeyT3uFO9GfPVS1QtSnhJLoVyFigDWlEifLT542ADqSeWxlVrjA6R3UHaRsOHjt27UT0UgOE2ls9+SoLJDhx6vSmWjsZBUbBHBxFzacwsbPw6y75dXr5Z0P5hGGjX+wNuOklgFUaR5Sm/w=
+     procedure_id : 2164148310170956955
+     type_code : 15
+     code : |1-
+      
+      // Résumé : Mets à jour les noms de configurations s'ils sont vides (facilite le passage de la version 1.2.2.0 à la 2.0.0.0)
+      // Syntaxe :
+      //MetsAJourNomConfiguration ()
+      //
+      PROCEDURE MetsAJourNomConfiguration()
+      
+      POUR TOUTE Configuration 
+      	SI Configuration.Nom = "" ALORS
+      		Configuration.Nom = Configuration.NomServeur
+      		HModifie(Configuration)
+      	FIN
+      FIN
+     type : 458752
+   -
+     name : CheckConnexion
+     internal_properties : CAAAAAgAAACuxuJT3yTmOPtS3ltxwTPDI3xPRYmATmzn9SbPR3ne8TIsFWQvoLvdxtjn7+eOKUh9erShlTiug/yftSVO42BbmdwqlcPN1CgvFchMLOH5r3l6NaHlZLymfYUNC2Jqfv+wyGmvbM/LSL/Fq1p5Jq5NQqH7Pk1ZifY8VGyw16E6pZZTtYyQjUk1Ojvl6X8ct7N5ozLBK36gAphau+Wkyh+1GO3R6lfoZzwMVzEzJkkFlU1fsClufgQR+R0dUJXKLESO+7H3btGVZ2nD
+     procedure_id : 2276226001400071424
+     type_code : 15
+     code : |1-
+      
+      // Résumé : Ravive la connexion si besoin (si le serveur l'a coupé par exemple)
+      //// Traitement automatique des exceptions :   exécuter le bloc de code CAS EXCEPTION:
+      //
+      
+      PROCEDURE CheckConnexion()
+      
+      
+      si gnIDConnexion <> -1 ALORS
+      	
+      	<COMPILE SI TypeConfiguration=Android>
+      		sReponse est une chaine
+      		SI gstConfiguration.nSecurite = FTP_SECURITE_AUCUNE ALORS
+      			SI PAS FTPCommande(gnIDConnexion,"NOOP",sReponse) _OU_ ChaîneOccurrence(sReponse,"200") < 1 ALORS
+      				
+      				// Déconnexion
+      				FTPDéconnecte(gnIDConnexion)
+      				
+      				// Petite tempo
+      				Multitâche(-10)
+      				
+      				// Connexion
+      				gnIDConnexion = FTPConnecteConfiguration()
+      				
+      				// Petite tempo
+      				Multitâche(-10)
+      			FIN
+      		FIN
+      	<FIN>
+      SINON
+      	// Reconnexion
+      	gnIDConnexion = FTPConnecteConfiguration()
+      
+      	// Petite tempo
+      	multitache(-10)
+      FIN
+      
+      CAS EXCEPTION:
+      	
+      	Trace("Exception CheckConnexion : " + ExceptionInfo())
+     type : 458752
+   -
+     name : ModeDebug
+     internal_properties : CAAAAAgAAACMnl/jXSKrydv8sCh/mN8DwGgjRnaht8W9zFpX/9Gc0AwxLUpCBcdv+xk/yGW62LIpZFTdW/CFk/acbwpdgEjK51n1cWSRaD1p8rJ6mHd7AfMlvJy/TkamhVa/uNM6MxnGyPCmpjc+Np9WL9viXBxYoDsI+/w9QSt1Hh/oI+nWvvvwUd35sBhCTd6SYZguqbHBjkQZKQ==
+     procedure_id : 1335920260159164838
+     type_code : 15
+     code : |1-
+      
+      // Résumé : Active ou non le mode debug afin d'afficher les traces
+      // 
+      PROCEDURE ModeDebug(bActiver est un booléen)
+      
+      gbEnModeDebug = bActiver
+     type : 458752
+   -
+     name : Trace
+     internal_properties : CAAAAAgAAACiF/uh9DlLdMvgJF5f9x6mN4ZeFxWaB8eDK74L/+EXFVgzmzyd/Z2YNIKfXfC3IZQubkigbS1q6a/QQKjSb7s/SdA3yLaf1cXHO36Kfqf/+Fk/AjBIgUHKreHluKBg28HHCG+cRHkBxtS5Q3HBFnBrh/tFsxsPuXhTzay5HiGlT84K0k2DCycyMON2aHa+QbWgHPUdybdA0DTiMGl4ZUouzKEWkVSvwPXXdy1UvYCgWPkuso7QWv+21p6l/EZ8JB627XNqBcxhpn7An5GBWTLVmeZ9jAItd5845+gBdBKGIlk7HIrdM0xisdJDM44LzPuT+wU29DE1HKKndAVf3v7FXjHPBF2y/Pmh4dxvxF3qIQuT/r5a+O47YlC+/tPLcpPqYn+onxZ12LTQWGPbV9/jpM37UkKCr0EK57wCnU//idVTrPxv5VuqRxvmraT6qX+e
+     procedure_id : 1335920492087452300
+     type_code : 15
+     code : |1-
+      
+      // Résumé : Surcharge la fonction de trace afin de tenir compte du mode debug
+      // Syntaxe :
+      //Trace (<sContenu> est chaîne)
+      //
+      // Paramètres :
+      //	sContenu (chaîne ANSI) : La trace à afficher
+      
+      PROCEDURE Trace(local sContenu est une chaine)
+      
+      SI gbEnModeDebug ALORS
+       	wl.trace(sContenu)
+      FIN
+     type : 458752
+   -
+     name : FTPConnecteConfiguration
+     internal_properties : CAAAAAgAAAD6SMPUO4uIpZqro7hcOJcX2sxte8HhJ9GIeFIH1hyh52lCW0q2XeD4V8vaAq25iMbXhfVlNkTFzhugo6H2AXGz/zH5SefJakLpVJb61I1+DxpP4PnehcvpmRl6HpGin2Uk4CXkkjuFQJ52WsSc6i3haLggMtYT4Bhi16LZhNEhZs8sAEI3IwcyU99EgwE68g9pKgdX2NzPMGGNC+jcQ3Oc1bggx9damYkq7J8vkkAARraN3W+Z6mtNf65S1cRmtKBNmI7TK5CnYrE9DZ0s+h3EKoT2snS736WKm6dy50JygrxuY4JcuyFDmSFqwya4uQJfd2Z78Au6jyHDaw==
+     procedure_id : 1769746157734066962
+     type_code : 15
+     code : |1-
+      // Résumé : Lance une connexion FTP
+      // Syntaxe :
+      //[ <Résultat> = ] FTPConnecteConfiguration ( [<stConfig> est STConfiguration])
+      //
+      // Paramètres :
+      //	stConfig (STConfiguration) : La configuration
+      // Valeur de retour :
+      // 	entier : // 	Aucune
+      //
+      // Exemple :
+      // Indiquez ici un exemple d'utilisation.
+      //
+      PROCEDURE FTPConnecteConfiguration(stConfig est une STConfiguration = gstConfiguration) : entier
+      
+      nConnexion est un entier
+      sProtocole est une chaîne
+      
+      
+      // On recherche le protocole selon la sécurité de la connexion
+      SELON stConfig.nSecurite
+      	CAS FTP_SECURITE_AUCUNE
+      		// non sécurisée	
+      		sProtocole = ""
+      		si stConfig.nport = 0 alors stConfig.nport = 21
+      	CAS FTP_SECURITE_SFTP
+      		// sécurisée : protocole SFTP
+      		sProtocole = "sftp://"
+      		si stConfig.nport = 0 alors stConfig.nport = 22
+      	CAS FTP_SECURITE_ftps
+      		// sécurisée : protocole FTPS
+      		sProtocole = "ftps://"
+      		si stConfig.nport = 0 alors stConfig.nport = 990
+      	CAS FTP_SECURITE_FTPES			
+      		// sécurisée : protocole FTPES	
+      		sProtocole = "ftpes://"
+      		si stConfig.nport = 0 alors stConfig.nport = 21
+      		
+      FIN
+      
+      
+      nConnexion = FTPConnecte(sProtocole+stConfig.sNomServeur,stConfig.sUtilisateur,stConfig.sMotDePasse,stConfig.nPort,stConfig.bPassif,stConfig.nDelai)
+      
+      
+      renvoyer nConnexion
+     type : 458752
+  procedure_templates : []
+  property_templates : []
+ code_parameters :
+  internal_properties : CAAAAAgAAACVGQgYbalU7DKC3oH4ItDrjtcTHXXV/EuH8q0IbhyQlw==
+  original_name : COL_ProcéduresGlobales1
+resources :
+ string_res :
+  identifier : 0x1cd27ae100063023
+  internal_properties : CAAAAAgAAACm76HWfKGWp33VjXInA4cRlqArlgTTA862QGt72W2ld5Y=
+  strings :
+   -
+     text :
+      fr-FR : Connexion effectuée
+      en-GB : Connection established
+     index : 0
+   -
+     text :
+      fr-FR : Erreur lors de la connexion.
+      en-GB : Error during the connection.
+     index : 1
+   -
+     text :
+      fr-FR : "Erreur lors de la connexion : "
+      en-GB : "Error during the connection: "
+     index : 2
+   -
+     text :
+      fr-FR : Connexion...
+      en-GB : Connection...
+     index : 3
+   -
+     text :
+      fr-FR : Déconnexion effectuée
+      en-GB : Disconnection successful
+     index : 4
+   -
+     text :
+      fr-FR : Echec de déconnexion
+      en-GB : Disconnection failure
+     index : 5
+   -
+     text :
+      fr-FR : La session FTP spécifiée n'existe pas ou la connexion au serveur a été perdue.
+      en-GB : FTP session not found or connection to server lost.
+     index : 6
+   -
+     text :
+      fr-FR : Délai d'attente dépassé.
+      en-GB : The timeout period has expired.
+     index : 7
+   -
+     text :
+      fr-FR : La commande FTP a échoué.
+      en-GB : The FTP command failed.
+     index : 8
+   -
+     text :
+      fr-FR : Vérifiez vos paramètres de connexion.
+      en-GB : Check your connection settings.
+     index : 9
+   -
+     text :
+      fr-FR : Impossible de modifier le répertoire courant.
+      en-GB : Unable to modify the current directory.
+     index : 10
+   -
+     text :
+      fr-FR : Impossible de récupérer le répertoire courant.
+      en-GB : Unable to retrieve the current directory.
+     index : 11
+custom_note :
+ internal_properties : CAAAAAgAAABtB9HWVzrXO2+4NDRVK0vmzaNKrCKqH1DBX30lMmGZ

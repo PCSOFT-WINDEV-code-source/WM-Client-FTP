@@ -1,0 +1,107 @@
+#To edit and compare internal_properties, use WINDEV integrated tools.
+#Internal properties refer to the properties of controls in windows, reports, etc.
+info :
+ name : COL_JAVA
+ major_version : 28
+ minor_version : 0
+ type : 7
+ description : ""
+ subtype : 0
+procedure_set :
+ identifier : 0x1a1fdc0b07775934
+ internal_properties : CAAAAAgAAABGLu41kG7fjQV3iS4F72qmnKaNh5694reolNKIW0iw
+ code_elements :
+  type_code : 31
+  p_codes : []
+  procedures :
+   -
+     name : JAVA_ActionBarSupprimeOmbre
+     procedure_id : 1882467029042605345
+     type_code : 15
+     code : |1-
+      
+      import android.view.View;
+      import android.os.Build;
+      import android.view.Window;
+      
+      // Résumé : Supprime l'ombre de l'action bar
+      public static void JAVA_ActionBarSupprimeOmbre(){
+      
+      	if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+      		View actionbar;
+      		
+      		// Récupération de l'action bar
+      		Window window = getActiviteEnCours().getWindow();
+      		View v = window.getDecorView();
+      		int resId = getContexteApplication().getResources().getIdentifier("action_bar_container", "id", "android");
+      		actionbar = v.findViewById(resId);
+      		
+      		// Changement de l'élévation pour supprimer m'ombre
+      		if (actionbar != null){
+      			actionbar.setElevation(0);
+      		}
+      		
+      	}
+      }
+     language : Java
+     type : 458752
+   -
+     name : JAVA_NavBarSeparateurChangeCouleur
+     procedure_id : 2053526363643664597
+     type_code : 15
+     code : |1-
+      
+      import android.os.Build;
+      
+      // Change la couleur du séparateur de la barre de navigation Android
+      public static void JAVA_NavBarSeparateurChangeCouleur(String sHexaColor){
+      	if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {                
+      		getActiviteEnCours().getWindow().setNavigationBarDividerColor( android.graphics.Color.parseColor(sHexaColor));
+      	}
+      }
+     language : Java
+     type : 458752
+   -
+     name : JAVA_NavBarChangeCouleur
+     procedure_id : 2053581472345104330
+     type_code : 15
+     code : |1-
+      
+      import android.os.Build;
+      
+      // Change la couleur de la barre de navigation Android
+      public static void JAVA_NavBarChangeCouleur(String sHexaColor){
+      	if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {                
+      		getActiviteEnCours().getWindow().setNavigationBarColor( android.graphics.Color.parseColor(sHexaColor));
+      	}
+      }
+     language : Java
+     type : 458752
+   -
+     name : JAVA_StatusBarChangeCouleur
+     procedure_id : 2055486586703195307
+     type_code : 15
+     code : |1-
+      
+      import android.view.WindowManager;
+      
+      public static void JAVA_StatusBarChangeCouleur(String sHexaColor){
+      	if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+      		Window window = getActiviteEnCours().getWindow();
+      		window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+      		window.setStatusBarColor(android.graphics.Color.parseColor(sHexaColor));
+      	}
+      }
+     language : Java
+     type : 458752
+  procedure_templates : []
+  property_templates : []
+ code_parameters :
+  internal_properties : CAAAAAgAAACVGQgYbalU7DKC3oH4ItDrjtcTHXXV/EuH8q0IbhyQlw==
+  original_name : COL_SansNom1
+resources :
+ string_res :
+  identifier : 0x1fc506b309fd5838
+  internal_properties : CAAAAAgAAACm76HWfKGWp33VjXInA4cRlqArlgTTA862QGt72W2ld5Y=
+custom_note :
+ internal_properties : CAAAAAgAAABtB9HWVzrXO2+4NDRVK0vmzaNKrCKqH1DBX30lMmGZ

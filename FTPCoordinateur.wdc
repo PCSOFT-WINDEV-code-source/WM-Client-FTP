@@ -1,0 +1,251 @@
+#To edit and compare internal_properties, use WINDEV integrated tools.
+#Internal properties refer to the properties of controls in windows, reports, etc.
+info :
+ name : FTPCoordinateur
+ major_version : 28
+ minor_version : 0
+ type : 4
+ description : ""
+ subtype : 0
+class :
+ identifier : 0x1e032d8b00531597
+ internal_properties : CAAAAAgAAAB2/vstTMCJbS/hlxjFxirSqKvCUuv8YxgpWyl7S3iA
+ code_elements :
+  internal_properties : CAAAAAgAAACld4lkjFJW2HwdCTGWbo8PfSDhxzjMMxpEVLQEVn07Rs2UmuggYVqRaumb7cST8+FrY4OGea6m4CsOGn7ErP+MwjEzw8cpOYtbMCYvuavuDHD0
+  type_code : 10
+  p_codes :
+   -
+     internal_properties : CAAAAAgAAAAfl9fDVE/MfTQppg5pTrIiI+Vc0YVTXqQV2wM5Gpoc/kSLIBZPcP8z+mHYJKH2OH1QKQgzJfdRPWtmUSSi68lWR+b/P+SEWCRRA46G//+tqC2TXXuv/jzF25eDmL1vCcfHNL4oHHAy81hiMMivTba2Fms4TAQB3xpYphGYgVKo
+     code : |1+
+      FTPCoordinateur est une classe
+      	// File d'attente
+      	m_tabTransferts 			est un tableau de FTPTransfert
+      	
+      	// ID courant des transferts
+      	m_nIDTransfertCourant		est une entier
+      	
+      Fin
+      
+     type : 131072
+  procedures :
+   -
+     name : Constructeur
+     internal_properties : CAAAAAgAAACjlbrh/UsXBs/c72oETyApwx1c7MiN8/tf0lNguKUPHyHMDjiDIDG9+DOTJCgGjV5XegoAIHSaXKZlUIU4uEYclWmcw92UMHDM1grkLvrA0nPBoLvSE77f6LD1jO+JP+w9LQ+ZOux2CszuH0Q=
+     procedure_id : 2162622321097184663
+     type_code : 27
+     code : |1+
+      PROCEDURE Constructeur()
+      
+      Trace("Création du coordinateur et lancement de son thread.")
+      
+      Run()
+     type : 589824
+   -
+     name : Destructeur
+     procedure_id : 2162622321097250199
+     type_code : 28
+     code : |1+
+      PROCEDURE Destructeur()
+     type : 655360
+   -
+     name : Run
+     internal_properties : CAAAAAgAAACZCbca2lSSrYgu8iS8mJBlI+gciXxozSlFuZ682wBG+1PJqT3Re8tIZ4XuV+xUprfJurVD3lIVDX5RGtYb27MoFLndOSUYl2wdJiaZXvVmFCyPKgqm7VfKhQpR+20fioZd8et6NST9GOFDkjcyI1rHSk4cREGA7qFRBKDnb+6+37qh35/n5VJBsXoTeFXao2RJCP2fdpAkgU3rhsbCO6PDMDLYOIV1/QmB4FtSFCC5R+HLNP27kQkUSztH/oGWVTBBwEfPsk8jr//2D7OwxPer63Upf7iOy8brj0xZiPOyqgkxN/AC7jMyRHzg1vQIT8toJNilHR8T/2o6zKCCvznxgJNxp8uzM8qKARZ0wLVccSzm3x6nfCvCE44+dpvHZz3/BXf5uU14x+vL8ReNDv0SpNK2jj0I1tvNXEtDmk7n3ueprk79/abRPNhHlTZSaDh6IQlCFr1laFVLn68wTdr/PJ6Tq3MXnACZ0eX6JUydCAIOyez9xQI=
+     procedure_id : 2162622913802809525
+     type_code : 12
+     code : |1+
+      
+      // Résumé : Traire les transferts en attente (à exécuter dans un thread)
+      //// Procédure automatique :
+      // La procédure est exécutée manuellement, lors d'un appel dans le code
+      // Elle s'exécutera dans un thread (sans avoir besoin d'appeler la fonction ThreadExecute), sans utilisation de HFSQL
+      // 
+      
+      PROCEDURE publique Run()
+      
+      Trace("lancement du coordinateur")
+      bMettreAJourUI est un booléen = faux
+      
+      
+      // Est ce qu'on est toujours connecté?
+      tantque gnIDConnexion <> -1
+      	bMettreAJourUI = faux
+      	
+      	// Gestion du nombre de transferts simultanés max
+      	si gnNbTransfertsEnCours >= gnNbTransfertsSimultanés ALORS
+      		continue
+      	FIN
+      	
+      	// Y a t-il des des transferts en attente?
+      	SI m_tabTransferts..Occurrence > 0 ALORS
+      		// Pour tout les transferts 
+      		POUR TOUT clTransfert de m_tabTransferts
+      			// Gestion du nombre de transferts simultanés max
+      			SI gnNbTransfertsEnCours >= gnNbTransfertsSimultanés ALORS
+      				sortir
+      			FIN
+      			
+      			// Faut-il mettre à jour l'UI
+      			SI pas bMettreAJourUI _et_ (clTransfert.m_nStatut = FTPTransfert.STATUT_ENATTENTE _ou_ clTransfert.m_nStatut = FTPTransfert.STATUT_ENCOURS) ALORS
+      				bMettreAJourUI = vrai
+      				// Démarrage du thread de l'ui manager s'il n'est pas déjà en fonction
+      				SI PAS gclUIManager.bEnFonction ALORS
+      					gclUIManager.Démarre()
+      				FIN
+      			FIN
+      			// Démarrage des transferts en attente
+      			SI clTransfert.m_nStatut = FTPTransfert.STATUT_ENATTENTE ALORS
+      				///////////////////////////////////////////////////////////////////////////////////////////
+      				// Lancement du transfert
+      				clTransfert.LanceTransfert()
+      				
+      				// Tempo entre 2 traitements
+      				multitache(-20)
+      			FIN
+      		FIN
+      	FIN
+      	
+      	// Gestion de l'ui manager
+      	SI pas bMettreAJourUI
+      		SI gclUIManager.bEnFonction ALORS
+      			gclUIManager.Arrête()
+      		FIN
+      	FIN
+      	
+      	// Tempo entre 2 checks de file d'attente
+      	multitache(-5)
+      FIN
+      
+      Trace("Arrêt du coordinateur FTP")
+     type : 458752
+   -
+     name : Arrête
+     internal_properties : CAAAAAgAAADLgiEzLIH2Cgg5Vl7pfmLio+V8gedLvgBhJ7M5Jgo06tBvBJ6L2IfXjkUQ9DV+eImE/dQTSWeheVdiIVQeG4F8bZBRLV4C3s7PZQCMFQ3bnlO9T8kBNFrnMTE9JquFf73dxsguflZAtd4sKFAH9V6e7lPQVNzpy0vxjQhnkAZ8
+     procedure_id : 2162635330604322216
+     type_code : 12
+     code : |1-
+      
+      // Résumé : Arrêt de tout les transferts
+      //
+      PROCEDURE Arrête()
+      Trace("arrête tout les transferts")
+      pour tout clTransfert de m_tabTransferts
+      	SI clTransfert.m_nStatut = FTPTransfert.STATUT_ENCOURS ALORS
+      		AnnuleTransfert(clTransfert.m_nID)
+      	FIN
+      FIN
+     type : 458752
+   -
+     name : AjouteTransfert
+     internal_properties : CAAAAAgAAAB0RGk0QvpJH7j3av6GFYazA34aa/sSSEDSpgYrVI9R/g3I2xo3Pk5vDak9BLLk6yK18GO2gvkZoOM8KP+yqG1VFnNtQOKNa63B6m87j/+LRP7KN+90HQvp/JgtX/eCWV7wPgjEpsNu0b8yff6ZL7VhD/8Lu+FpCKAU7PddJe+5oJFe9V0BGAasoinlOxn2jS9hdhcpq9WHt+OkfRv6h8z1cKiufpEuPrdEp0+Rf66eLTpim9OGB1Nt/GKRrob1Jyx9+UTD1u0p8SfyxphVrT4TdrG1b621sXg7z5iL+3xwe7GrJulGlBWsNF8rMwrYQtk/+GaZON5hpF5Ih36WmJTjodRjTbQvtXusAIUbXw==
+     procedure_id : 2162636107993452681
+     type_code : 12
+     code : |1-
+      
+      // Résumé : Ajoute un transfert dans la file d'attente
+      // Syntaxe :
+      //[ <Résultat> = ] AjouteTransfert (<sFichier> est chaîne ANSI, <sRepDestination> est chaîne ANSI, <nType> est entier, <bTélécharger> est booléen)
+      //
+      // Paramètres :
+      //	sFichier (chaîne ANSI) : Fichier du transfert
+      //	sRepDestination (chaîne ANSI) : Répertoire de destination
+      //	nType (entier) : type de fichier (ftpfichier ou ftprépertoire)
+      //	bTélécharger (booléen) : Télécharger ou Envoyer
+      // Valeur de retour :
+      // 	booléen : Vrai si le transfert a été ajouté correctement
+      //
+      PROCEDURE AjouteTransfert(sFichier est une chaine, sRepDestination est une chaine, nType est un entier, bTélécharger est un booléen)
+      
+      // Variable locale
+      clTransfert est un FTPTransfert
+      
+      ///////////////////////////////////////////////////////////////////////////////////////////
+      // Paramétrage
+      SI sFichier <> "" ALORS
+      	clTransfert.m_sFichier = sFichier
+      SINON
+      	renvoyer faux
+      FIN
+      
+      SI sRepDestination <> "" ALORS
+      	clTransfert.m_sRepDestination = sRepDestination
+      SINON 
+      	clTransfert.m_sRepDestination = "/"
+      FIN
+      
+      SI nType  = FTPFichier _ou_ nType = FTPRépertoire ALORS
+      	clTransfert.m_nType = nType
+      SINON
+      	renvoyer faux 
+      FIN
+      
+      clTransfert.m_bTélécharger = bTélécharger
+      
+      // Incrémentation de l'ID
+      m_nIDTransfertCourant++
+      clTransfert.m_nID = m_nIDTransfertCourant
+      
+      // Statut
+      clTransfert.m_nStatut = FTPTransfert.STATUT_ENATTENTE
+      
+      ///////////////////////////////////////////////////////////////////////////////////////////
+       // Ajout de la file d'attente
+       TableauAjoute(m_tabTransferts,clTransfert)
+       Trace("Ajout d'un transfert  : " + sFichier + " " + sRepDestination + " " + nType + " " + bTélécharger)
+      
+      renvoyer vrai
+     type : 458752
+   -
+     name : AnnuleTransfert
+     internal_properties : CAAAAAgAAABVUWoi5Dfe/upi2Iy+dmF3ByjXxYDGHQuKv1zhr8Wa+9BOF+LWme3J8rGHlqAYgjxKxC04sMZryn+NKR/UKOf5+sNHJ3Qrku2YtNCtoCyUZhSk5gS24hrHoXPUbDTCpxO2nEcKKMDRFddtMRyKnGgP8qQfZQzSVVC4vfMSSwU0j17j5ZPvfbFgWlvqYEJE46zOsxKp34HwnBij7Jnbeq9oZpAka48tsZUq9N6IAPC5ORCs0Cf6fobzrSaCtwpbx0yKO7CuPu37VLn79IKjtYaHaKT6s/1UQbk2bzCtBxVyvGxv9JGlvVinTqozQLTkEpmGKvMkjO99bBfp3Vg0P+u7pNSTiS4IqkOYcygupsE=
+     procedure_id : 2162639084406088971
+     type_code : 12
+     code : |1-
+      
+      // Résumé : Annule un transfert encours ou en file d'attente
+      // Syntaxe :
+      //[ <Résultat> = ] AnnuleTransfert (<nIDTransfert> est entier)
+      //
+      // Paramètres :
+      //	nIDTransfert (entier) : L'ID du transfert à annuler
+      // Valeur de retour :
+      // 	booléen : Vrai si le transfert a été annulé
+      //
+      PROCEDURE AnnuleTransfert(nIDTransfert est un entier)
+      
+      // Variables locales
+      nIndice 			est un entier
+      clTransfert 		est un FTPTransfert
+      
+      Trace("Demande d'annulation du transfert avec l'id : " + nIDTransfert)
+      
+      // Recherche dans la file d'attente
+      nIndice = TableauCherche(m_tabTransferts,tcLinéaire,"m_nID",nIDTransfert)
+      
+      Si nIndice > 0 ALORS
+      	// Récupération du transfert
+      	clTransfert = m_tabTransferts[nIndice]
+      
+      	SI clTransfert.m_nStatut= FTPTransfert.STATUT_ENATTENTE ou clTransfert.m_nstatut = FTPTransfert.STATUT_ENCOURS ALORS
+      			//Annulation$
+      			Trace(ChaîneConstruit("Changement du statut du transfert %1 en annulé",nIDTransfert))
+      			
+      			m_tabTransferts[nIndice].m_nStatut = FTPTransfert.STATUT_ANNULE
+      			RENVOYER Vrai
+      	FIN
+      SINON
+      	Trace("Transfert non trouvé.")
+      FIN
+      
+      RENVOYER Faux
+     type : 458752
+  procedure_templates : []
+  property_templates : []
+ code_parameters :
+  internal_properties : CAAAAAgAAACVGQgYbalU7DKC3oH4ItDrjtcTHXXV/EuH8q0IbhyQlw==
+  original_name : CClasse1
+resources :
+ string_res :
+  identifier : 0x1fc506b309ac57fa
+  internal_properties : CAAAAAgAAACm76HWfKGWp33VjXInA4cRlqArlgTTA862QGt72W2ld5Y=
+custom_note :
+ internal_properties : CAAAAAgAAABtB9HWVzrXO2+4NDRVK0vmzaNKrCKqH1DBX30lMmGZ
